@@ -1,0 +1,67 @@
+{
+  "year": [
+    {
+      "expenses": [
+        {
+          "name": "Croquette_chiot",
+          "amount": 200,
+          "category": "food",
+          "date": "2026-08-10"
+        },
+        {
+          "name": "Carotte",
+          "amount": 10,
+          "category": "food",
+          "date": "2026-08-11"
+        },
+        {
+          "name": "Repas_famille",
+          "amount": 100,
+          "category": "food",
+          "date": "2026-08-15"
+        },
+        {
+          "name": "Essence",
+          "amount": 250,
+          "category": "energy",
+          "date": "2026-08-03"
+        },
+        {
+          "name": "Facture eau",
+          "amount": 64.20,
+          "category": "water",
+          "date": "2026-08-01"
+        },
+        {
+          "name": "Abonnement internet",
+          "amount": 34.99,
+          "category": "internet",
+          "date": "2026-08-05"
+        },
+        {
+          "name": "Manuel Python",
+          "amount": 29.90,
+          "category": "education",
+          "date": "2026-08-12"
+        },
+        {
+          "name": "Reparation evier",
+          "amount": 95.00,
+          "category": "maintenance",
+          "date": "2026-08-18"
+        }
+      ]
+    },
+    {
+      "expenses": [
+        {
+          "name": "Croquette_chiot_V2",
+          "amount": 200,
+          "category": "food",
+          "date": "2026-08-10"
+        }
+      ]
+    }
+    
+  ]
+}
