@@ -1,8 +1,11 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+<<<<<<< HEAD
 import json
 from loading import import_json
 import json
+=======
+>>>>>>> 7987eb0 (V0)
 
 CATEGORIES = ["education", "energy", "water", "internet", "food", "maintenance"]
 MONTHS = []

@@ -1,52 +1,83 @@
-import streamlit as st
+import json
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 from Loading_ProjectPy import import_json
 from ProjetPy import ControlFin
 
-import plotly.express as px
-import pandas as pd
-import streamlit as st
 
+# _______________________________________________________________________
 def _render_comparaison_tab(expenses_archive):
-    # --- Run selection table ---
-    # --- Plot chart ---
-    data = []
-    for p, i in enumerate(expenses_archive):
-        V0 = ControlFin(i) 
-        dicCat = V0.add_expenses()  
-        year = 2026 - p
+    # 1. Extraction de toutes les données par année
+    all_data = []
+    years = []
+    for p, archive in enumerate(expenses_archive):
+        year = str(2026 - p)
+        years.append(year)
+
+        V0 = ControlFin(archive)
+        dicCat = V0.add_expenses()
+
         for cat_name, cat_obj in dicCat.items():
-            data.append({
-                "Archive": str(year),
-                "Categorie": cat_name,
-                "Valeur": cat_obj.get_amount()
-            })
+            all_data.append(
+                {
+                    "Archive": year,
+                    "Categorie": cat_name,
+                    "Valeur": cat_obj.get_amount(),
+                }
+            )
 
-    df = pd.DataFrame(data)
+    # 2. Tableau de sélection basé uniquement sur les années uniques
+    st.subheader(f"Sélection des années ({len(years)})")
+    df_years = pd.DataFrame([{
+        "Select": True, 
+        "Archive": y
+        } for y in years])
 
+    edited_df = st.data_editor(
+        df_years,
+        column_config={
+            "Select": st.column_config.CheckboxColumn("Select", default=True)
+        },
+        hide_index=True,
+        use_container_width=True,
+    )
+
+    # 3. Récupération des années cochées
+    selected_years = edited_df[edited_df["Select"]]["Archive"].tolist()
+
+    # 4. Filtrage du DataFrame global avec les années sélectionnées
+    df_all = pd.DataFrame(all_data)
+    df_chart = df_all[df_all["Archive"].isin(selected_years)]
+
+    # 5. Affichage du graphique
     fig = px.bar(
-        df,
+        df_chart,
         x="Archive",
         y="Valeur",
         color="Categorie",
-        barmode="stack",  # 'stack' pour empiler (par défaut), ou 'group' pour côte à côte
-        title="Expenses by Category across years"
+        barmode="stack",
+        title="Expenses by Category across years",
     )
-    
     st.plotly_chart(fig, use_container_width=True)
 
 
+# _______________________________________________________________________
 def _render_visualisation_tab(expenses_archive):
-    # --- Plot camenbert chart ---
-    V0 = ControlFin(expenses_archive[0]) 
-    diCat = V0.add_expenses()  
-    amounts = [cat.get_amount() for cat in diCat.values()]  #l'année en question on recupere l'objet categorie et on veut
+    # --- Plot camembert chart ---
+    V0 = ControlFin(expenses_archive[0])
+    diCat = V0.add_expenses()
+    amounts = [cat.get_amount() for cat in diCat.values()]
     data = {"Categorie": list(diCat.keys()), "Valeur": amounts}
     df = pd.DataFrame(data)
 
-    fig = px.pie(df, values="Valeur", names="Categorie", title="Expenses during this last year")
-    st.plotly_chart(fig, width='stretch')
+    fig = px.pie(
+        df,
+        values="Valeur",
+        names="Categorie",
+        title="Expenses during this last year",
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 
 # ---------------------------------------------------------------------------
